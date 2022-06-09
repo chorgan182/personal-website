@@ -1,0 +1,87 @@
+baseURL: https://chuckhorgan.com/
+languageCode: en-us
+title: Chuck Horgan
+theme: personal-web
+copyright: © Chuck Horgan
+googleAnalytics: ''
+enableEmoji: yes
+enableRobotsTXT: yes
+pygmentsUseClasses: yes
+pygmentsCodeFences: yes
+params:
+  accentColor: '#FD3519'
+  assets:
+    customCSS: ''
+    favicon: ''
+  breadcrumb: yes
+  contact:
+    email: ''
+    text: ''
+  intro:
+    main: "Hi, I'm Chuck :wave:"
+    sub: "2 Parts Data Scientist :man_technologist: <br> 3 Parts Solution Engineer :check_mark:"
+  main:
+    latestPublishHeader: My Latest Project
+  mainSections: portfolio
+  notFound:
+    gopher: /images/gopher.png
+    h1: Bummer!
+    p: It seems that this page doesn't exist.
+  sections:
+    portfolio: project
+    post: article
+  sidebar:
+    backgroundImage: ''
+    gradientOverlay: ''
+    logo: ''
+  social:
+    #codepen: https://codepen.io/
+    #facebook: https://www.facebook.com/
+    github: https://github.com/chorgan182
+    #gitlab: https://gitlab.com/
+    #instagram: https://www.instagram.com/
+    #keybase: https://keybase.io/
+    linkedin: https://www.linkedin.com/in/charles-t-horgan-iv/
+    #medium: https://medium.com/
+    #twitter: https://twitter.com/
+    youtube: https://www.youtube.com/channel/UCrbKPkhmPJ7k5Vd8Y1M-d2A
+taxonomies:
+  design: designs
+  tech: techs
+blackfriday:
+  hrefTargetBlank: yes
+menu:
+  main:
+    - identifier: about
+      name: About
+      title: About section
+      url: /about/
+      weight: -120
+    - identifier: portfolio
+      name: Portfolio
+      title: Portfolio
+      url: /portfolio/
+      weight: -110
+    - identifier: blog
+      name: Post
+      title: Blog section
+      url: /post/
+      weight: -100
+sitemap:
+  changefreq: monthly
+  filename: sitemap.xml
+  priority: 0.5
+privacy:
+  googleAnalytics:
+    anonymizeIP: yes
+    disable: yes
+    respectDoNotTrack: yes
+    useSessionStorage: no
+  twitter:
+    disable: no
+    enableDNT: yes
+    simple: no
+markup:
+  goldmark:
+    renderer:
+      unsafe: yes
