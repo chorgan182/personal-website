@@ -17,7 +17,7 @@ ignoreFiles:
 params:
   accentColor: "#FD3519"
   assets:
-    customCSS: ""
+    customCSS: "/css/custom.css"
     favicon: ""
   breadcrumb: yes
   contact:
@@ -38,7 +38,7 @@ params:
     post: article
   sidebar:
     backgroundImage: "/images/sdr_res.jpg"
-    gradientOverlay: ""
+    gradientOverlay: rgba(0,0,0,0.4),rgba(0,0,0,0.8)
     logo: "/images//Headshot Summer 2021_square.jpg"
   social:
     linkedin: https://www.linkedin.com/in/charles-t-horgan-iv/
