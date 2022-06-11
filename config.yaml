@@ -1,4 +1,4 @@
-baseURL: https://chuckhorgan.com/
+baseURL: peppy-stardust-cd83f9.netlify.app
 languageCode: en-us
 title: Chuck Horgan
 theme: personal-web
@@ -21,11 +21,11 @@ params:
     favicon: ''
   breadcrumb: yes
   contact:
-    email: ''
-    text: ''
+    email: "chorgan182@gmail.com"
+    text: "Email Me"
   intro:
     main: "Hi, I'm Chuck :wave:"
-    sub: "2 Parts Data Scientist :man_technologist: <br> 3 Parts Solution Engineer :check_mark:"
+    sub: "1 Part Data Scientist :man_technologist: <br> 2 Parts Solution Engineer :check_mark:"
   main:
     latestPublishHeader: My Latest Project
   mainSections: portfolio
@@ -37,9 +37,9 @@ params:
     portfolio: project
     post: article
   sidebar:
-    backgroundImage: ''
+    backgroundImage: "images/sdr_res.jpg"
     gradientOverlay: ''
-    logo: ''
+    logo: "images/Headhost Summer 2021_square.jpg"
   social:
     linkedin: https://www.linkedin.com/in/charles-t-horgan-iv/
     github: https://github.com/chorgan182
