@@ -37,3 +37,10 @@ vignettes/*.pdf
 
 # R Environment Variables
 .Renviron
+
+# Additional items to ignore
+.DS_Store
+Thumbs.db
+.hugo_build.lock
+public
+resources

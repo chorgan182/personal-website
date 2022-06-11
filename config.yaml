@@ -8,6 +8,12 @@ enableEmoji: yes
 enableRobotsTXT: yes
 pygmentsUseClasses: yes
 pygmentsCodeFences: yes
+ignoreFiles:
+  - \.Rmd$
+  - \.Rmarkdown$
+  - _cache$
+  - \.knit\.md$
+  - \.utf8\.md$
 params:
   accentColor: '#FD3519'
   assets:
@@ -35,16 +41,11 @@ params:
     gradientOverlay: ''
     logo: ''
   social:
-    #codepen: https://codepen.io/
-    #facebook: https://www.facebook.com/
-    github: https://github.com/chorgan182
-    #gitlab: https://gitlab.com/
-    #instagram: https://www.instagram.com/
-    #keybase: https://keybase.io/
     linkedin: https://www.linkedin.com/in/charles-t-horgan-iv/
-    #medium: https://medium.com/
-    #twitter: https://twitter.com/
+    github: https://github.com/chorgan182
     youtube: https://www.youtube.com/channel/UCrbKPkhmPJ7k5Vd8Y1M-d2A
+    #facebook: https://www.facebook.com/
+    #instagram: https://www.instagram.com/
 taxonomies:
   design: designs
   tech: techs
