@@ -15,10 +15,10 @@ ignoreFiles:
   - \.knit\.md$
   - \.utf8\.md$
 params:
-  accentColor: '#FD3519'
+  accentColor: "#FD3519"
   assets:
-    customCSS: ''
-    favicon: ''
+    customCSS: ""
+    favicon: ""
   breadcrumb: yes
   contact:
     email: "chorgan182@gmail.com"
@@ -37,9 +37,9 @@ params:
     portfolio: project
     post: article
   sidebar:
-    backgroundImage: '/images/sdr_res.jpg'
-    gradientOverlay: ''
-    logo: '/images/Headhost Summer 2021_square.jpg'
+    backgroundImage: "/images/sdr_res.jpg"
+    gradientOverlay: ""
+    logo: "/images//Headshot Summer 2021_square.jpg"
   social:
     linkedin: https://www.linkedin.com/in/charles-t-horgan-iv/
     github: https://github.com/chorgan182
