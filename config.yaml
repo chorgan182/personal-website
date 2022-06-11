@@ -1,4 +1,4 @@
-baseURL: peppy-stardust-cd83f9.netlify.app
+baseURL: https://www.chuckhorgan.com/
 languageCode: en-us
 title: Chuck Horgan
 theme: personal-web
@@ -37,9 +37,9 @@ params:
     portfolio: project
     post: article
   sidebar:
-    backgroundImage: "images/sdr_res.jpg"
+    backgroundImage: '/images/sdr_res.jpg'
     gradientOverlay: ''
-    logo: "images/Headhost Summer 2021_square.jpg"
+    logo: '/images/Headhost Summer 2021_square.jpg'
   social:
     linkedin: https://www.linkedin.com/in/charles-t-horgan-iv/
     github: https://github.com/chorgan182
