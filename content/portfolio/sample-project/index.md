@@ -3,7 +3,7 @@ date: "2019-05-02T19:47:09+02:00"
 description: This is the description of our sample project
 designs:
 - Photoshop
-jobDate: 2019
+jobDate: 2019-05-06
 projectUrl: https://www.sampleorganization.org
 techs:
 - javascript
