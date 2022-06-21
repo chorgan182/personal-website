@@ -1,0 +1,11 @@
+---
+title: Git with a Network Folder as Remote
+author: Chuck Horgan
+date: '2022-06-21'
+slug: []
+categories: []
+tags: []
+description: ~
+publishDate: '2022-06-21T16:55:25-04:00'
+draft: true
+---

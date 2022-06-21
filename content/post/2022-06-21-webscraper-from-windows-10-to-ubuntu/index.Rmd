@@ -1,0 +1,11 @@
+---
+title: Webscraper from Windows 10 to Ubuntu
+author: Chuck Horgan
+date: '2022-06-21'
+slug: []
+categories: []
+tags: []
+description: ~
+publishDate: '2022-06-21T17:03:00-04:00'
+draft: true
+---
