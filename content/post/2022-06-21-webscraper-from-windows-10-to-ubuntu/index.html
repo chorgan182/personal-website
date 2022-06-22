@@ -7,8 +7,116 @@ categories: []
 tags: []
 description: ~
 publishDate: '2022-06-21T17:03:00-04:00'
-draft: true
 ---
 
 
 
+<p><strong>:construction: under construction :construction:</strong></p>
+<div id="overview" class="section level1">
+<h1>Overview</h1>
+<p>I had written a web scraper in R to obtain information on daily <a href="https://www.defense.gov/Newsroom/Contracts/">DoD Awards</a>. The script does two main things:</p>
+<ol style="list-style-type: decimal">
+<li><p>Scrapes the most recent day’s announcements and saves them in a tidy Excel file.</p></li>
+<li><p>Sends an email to a recipient at CADE with the scraped data.</p></li>
+</ol>
+<p>Naively, I scheduled the script to run daily through <code>taskscheduleR</code>, an R package that uses the Windows task manager to schedule jobs. However, when the COVID-19 pandemic hit and we shifted to working from home, I realized that the scraper wasn’t running when my laptop wasn’t on. As a temporary fix, I moved everything to a shared, remote Windows machine. I knew this was not the “right” way to do it, as it would not run if someone else was using a Remote Desktop Connection on the machine. Another issue was random Outlook updates requiring the manual input of credentials again.</p>
+<p>So, this wiki documents the process of shifting everything to an Ubuntu 18.04 VM. Since many different things were involved in set up and configuration, the methods outlined below may be of use to someone else in the future, even if the goal is wildly different.</p>
+</div>
+<div id="server-set-up" class="section level1">
+<h1>Server Set Up</h1>
+<ul>
+<li><p>Set up a Remote Desktop Protocol on the Ubuntu VM. This is quite a process in itself, so please see the following link to another page: <a href="Setting-up-a-Remote-Desktop-Connection-on-Ubuntu-18.04">Setting up a Remote Desktop Connection on Ubuntu 18.04</a></p></li>
+<li><p>Install R/RStudio. Again, quite a process, so see this page: <a href="Installing-and-Configuring-RStudio-Desktop-on-Ubuntu-18.04">Installing and Configuring RStudio Desktop on Ubuntu 18.04</a></p></li>
+<li><p>Set up a mail server. You guessed it, quite a process: <a href="Installing-and-Configuring-a-Mail-server-on-Ubuntu-18.04">Installing and Configuring a Mail server on Ubuntu 18.04</a></p></li>
+</ul>
+</div>
+<div id="clone-project" class="section level1">
+<h1>Clone Project</h1>
+<ul>
+<li><p>Clone from Git from within RStudio.</p>
+<ul>
+<li><p>Go to File &gt; New Project.</p></li>
+<li><p>Select Version Control, then Git.</p></li>
+<li><p>Copy/Paste the URL of the project’s homepage on our GitLab.</p></li>
+<li><p>Choose the correct directory for the project. I like to use one in my home directory named “GitLocal”.</p></li>
+<li><p>Click Create Project.</p></li>
+<li><p>You may need to enter your GitLab credentials.</p></li>
+</ul></li>
+<li><p>We need to install Ubuntu dependencies to install <code>rvest</code> R package.</p></li>
+</ul>
+<pre><code>sudo apt-get install libcurl4-openssl-dev libxml2-dev</code></pre>
+</div>
+<div id="update-script" class="section level1">
+<h1>Update Script</h1>
+<ul>
+<li><p>Change all directory and file paths. Use relative instead of absolute, since the shell script will take care of the project directory.</p></li>
+<li><p>Delete section that sent email in R. This will be handled with the mail server we just set up on the Ubuntu VM.</p></li>
+<li><p><code>openxlsx</code> actually works in Ubuntu, even if you can’t open the Excel files. Not sure why this works, but it allows us to use a template that was cloned with the project. The template allows for formatted column widths and pretty headers.</p></li>
+<li><p>Write a couple run-specific variables to the project directory. These will be used in the email subject line and body.</p></li>
+</ul>
+<pre class="r"><code># write to .txt file for use with email message body
+cat(as.character(page_contract_details$url), file = &quot;scraped_url.txt&quot;)
+
+# write to .txt file for use with email subject line
+cat(as.character(page_date_extract), file = &quot;scrape_date.txt&quot;)</code></pre>
+</div>
+<div id="create-shell-script" class="section level1">
+<h1>Create Shell Script</h1>
+<ul>
+<li><p>This shell script will need to run the R script, save over the local extracted info file, and send an email with mutt.</p></li>
+<li><p>As of November 2020, it was as follows (remember, the current .sh file is in the repo linked at the top of this Page):</p></li>
+</ul>
+<pre><code>#!/bin/
+
+# change to project directory
+PROJ_DIR=/home/chorgan/GitLocal/dod-daily-contract-scraper
+cd $PROJ_DIR
+
+# print date for log info
+echo `date`
+
+# run R script that saves the updated information in the PROJ_DIR
+Rscript dod_web_scraper.R
+
+# prepare variables for email
+DATE_SCRAPED=`cat scrape_date.txt`
+
+TO=&quot;senser@technomics.net sandra.b.enser.ctr@mail.mil&quot;
+CC=&quot;chorgan@technomics.net&quot;
+SUBJECT=&quot;DoD Award Announcements for $DATE_SCRAPED&quot;
+SCRAPED_FILE=daily_award_info.xlsx
+MESSAGE=`cat message.txt &amp;&amp; cat scraped_url.txt`
+
+# send email
+echo $MESSAGE | mutt -s &quot;$SUBJECT&quot; -c $CC -a $SCRAPED_FILE -- $TO</code></pre>
+</div>
+<div id="schedule-the-daily-job" class="section level1">
+<h1>Schedule the Daily Job</h1>
+<ul>
+<li><p>We will be using <a href="https://www.digitalocean.com/community/tutorials/how-to-use-cron-to-automate-tasks-ubuntu-1804">cron</a> to schedule this task, as it is the most widely-used task-scheduler in the Linux world. Read up on how cron works in that hyperlink.</p></li>
+<li><p>Most distros come with cron, but to install it, do the following:</p></li>
+</ul>
+<pre><code>sudo apt-get update
+sudo apt-get install cron
+# enable the service
+sudo systemctl enable cron</code></pre>
+<ul>
+<li>Since we likely want to schedule tasks in our local timezone, ensure it is set correctly on our Ubuntu VM. <a href="https://help.ubuntu.com/community/UbuntuTime">Setting timezone in Ubuntu</a></li>
+</ul>
+<pre><code># set timezone on server
+sudo dpkg-reconfigure tzdata
+# go through on-screen prompts
+
+# restart cron service for changes to take effect
+sudo service cron restart</code></pre>
+<ul>
+<li>Edit your crontab to schedule the shell script. A good practice with scheduled tasks is piping the output to a log file. That way, we can always look back to see why something failed.</li>
+</ul>
+<pre><code>crontab -e
+# the first time you edit your crontab, you will be asked for an editor of choice
+# unless you have strong convictions, stick with nano (the default)
+
+# add the following line to the end of your crontab to run the shell script every day at 10am
+0 10 * * * cd ~/GitLocal/dod-daily-contract-scraper/ &amp;&amp; sh scrape_DoD_contracts.sh &gt; scrape_DoD_contracts.log
+# note the pipe into a log file</code></pre>
+</div>

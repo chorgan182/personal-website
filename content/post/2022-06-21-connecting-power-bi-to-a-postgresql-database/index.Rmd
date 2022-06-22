@@ -7,5 +7,44 @@ categories: []
 tags: []
 description: ~
 publishDate: '2022-06-21T16:53:31-04:00'
-draft: true
 ---
+
+**:construction: under construction :construction:**
+
+# Overview
+
+The USASpending database that lives on the _(name of server)_ server is running on PostgreSQL 10. Power BI gives the option for a PostgreSQL data source, but it can be error-prone. Using an ODBC connection is simple and secure. 
+
+# Procedure
+
+1. Open Power BI desktop.
+
+2. Click *Get data*.
+
+![image](uploads/9cd5de256897f75fcf64821ca4adf5bf/image.png)
+
+3. In the search bar, type "odbc". Click *Connect*.
+
+![image](uploads/d6179f5402839c9fb20085a1ecfb679a/image.png)
+
+4. In the *Data source name* dropdown, select *(None)*. Expand the *Advanced options* and enter the following connection string. Click *OK*.
+
+```
+Driver={PostgreSQL ANSI(x64)};Server=a-server.com;Port=5432;Database=usaspending;
+```
+
+5. Enter a valid set of credentials. Click *Connect*.
+
+A successful connection will bring up a Navigator and look like the following.
+
+_an image to be added_
+
+If you mistype a username or password, you will need to clear the cache of credentials. Go to *File > Options and Settings > Data source settings*. Find the connection string you just entered, right-click on it, and *Clear Permissions*. You will have to start from the beginning with *Get data*.
+
+_an image to be added_
+
+# References
+
+https://niftit.com/connecting-power-bi-to-postgresql/
+
+https://www.connectionstrings.com/postgresql-odbc-driver-psqlodbc/

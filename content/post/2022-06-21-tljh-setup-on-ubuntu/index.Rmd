@@ -7,5 +7,68 @@ categories: []
 tags: []
 description: ~
 publishDate: '2022-06-21T17:01:59-04:00'
-draft: true
 ---
+
+**:construction: under construction :construction:**
+
+# Overview
+
+TLJH is the most simple solution for running Jupyter notebooks on a local server for multiple users - see the [JupyterHub](https://jupyterhub.readthedocs.io/en/latest/). *If you need to start over, you need to follow all the blue revert notes on the [What does the installer do?](https://tljh.jupyter.org/en/latest/topic/installer-actions.html) page.*
+
+- `ssh` into an Ubuntu server. You will need sudo privileges.
+
+- Update packages. Postgres always has some unsigned repos for some reason. Tried following the instructions for [Postgres Linux downloads](https://www.postgresql.org/download/linux/ubuntu/), but they didn't work. Found this [SO article](https://askubuntu.com/questions/732985/force-update-from-unsigned-repository) and tailored it according to this [Postgres Wiki](https://wiki.postgresql.org/wiki/Apt). The "amd64" package failed to update for some reason still, even though it is downstream from the trusted repo. So `sudo apt-get update` *still* fails. Finally, I followed the instructions in the answer on this [DigitalOcean article](https://www.digitalocean.com/community/questions/sudo-apt-get-update-command-is-not-working), and the package update worked. It was hanging up on a few random things before.
+
+## Attempt 1 (failed)
+
+```
+sudo nano /etc/apt/sources.list.d/pgdg.list
+# add a line: deb [trusted=yes] http://apt.postgresql.org/pub/repos/apt bionic-pgdg main
+# C-s, C-x to save and exit nano editor
+sudo apt-get update
+# ^ still did not work
+```
+
+## Attempt 2 (successful)
+
+```
+sudo rm -rvf /var/lib/apt/lists/*
+# cannot run the following echo... command with sudo for some reason, switch to root user 
+sudo su - root
+echo "APT::Cache-Limit "100000000";" >> /etc/apt/apt.conf.d/70debconf
+su - <your user name>
+
+sudo rm -rvf /var/lib/apt/lists/* \
+&& sudo mv /var/lib/dpkg/status /var/lib/dpkg/status-bad \
+&& sudo cp /var/lib/dpkg/status-old /var/lib/dpkg/status \
+&& sudo apt-get update
+
+sudo apt-get autoclean \
+&& sudo apt-get autoremove -y \
+&& sudo apt-get update
+
+sudo apt-get upgrade -y
+``` 
+
+- Follow the [Installing on your own server](https://tljh.jupyter.org/en/latest/install/custom-server.html) instructions. Note the requirements. Change the `<admin-user-name>` as appropriate.
+
+```
+sudo apt install python3 python3-dev git curl
+sudo curl -L https://tljh.jupyter.org/bootstrap.py | sudo -E python3 - --admin <admin-user-name>
+```
+
+- Stop after step 4; we need to update the port for the public IP. If you [check the proxy log](https://tljh.jupyter.org/en/latest/troubleshooting/logs.html#traefik-proxy-logs), you'll see that the `traefik` service may fail to start due to an error opening a listener on port 80. This default port may already be in use on `datsdev`.
+
+```
+sudo journalctl -u traefik
+```
+
+- Update the http port (I used 8080 but could be any not in use) and reload the proxy with the [port configuration instructions](https://tljh.jupyter.org/en/latest/topic/tljh-config.html#ports). Also reload the hub.
+
+```
+sudo tljh-config set http.port 8080
+sudo tljh-config reload proxy
+sudo tljh-config reload hub
+```
+
+- Proceed to step 5 of the instructions. Use **your server DNS** as the "public IP" - append that with the port we just set, and the Jupyter login page should open.

@@ -7,8 +7,57 @@ categories: []
 tags: []
 description: ~
 publishDate: '2022-06-21T17:01:12-04:00'
-draft: true
 ---
 
 
 
+<p><strong>:construction: under construction :construction:</strong></p>
+<div id="install-r" class="section level1">
+<h1>Install R</h1>
+<ul>
+<li><p>The main instructions are <a href="https://cran.rstudio.com/bin/linux/ubuntu/README.html">here</a>, but I have summarized them for R 4.0 below.</p></li>
+<li><p>Add entry to sources.list for R 4.0. Save and exit nano editor with <code>C-s</code> <code>C-x</code>.</p></li>
+</ul>
+<pre class="bash"><code>sudo nano /etc/apt/sources.list
+# add the following line to the end of the file
+deb https://cloud.r-project.org/bin/linux/ubuntu bionic-cran40/</code></pre>
+<ul>
+<li>Add the public key to the local keyfile. Without this step, you will get a “PUBLIC KEY NOT FOUND” error.</li>
+</ul>
+<pre class="bash"><code>sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9</code></pre>
+<ul>
+<li>Install base R system. Check specific instructions to <a href="https://docs.rstudio.com/resources/install-r/">support multiple versions</a> (if applicable).</li>
+</ul>
+<pre class="bash"><code>sudo apt-get update
+sudo apt-get install r-base</code></pre>
+<ul>
+<li>Install dev, needed for use of <code>install.packages()</code>.</li>
+</ul>
+<pre class="bash"><code>sudo apt-get install r-base-dev</code></pre>
+</div>
+<div id="install-rstudio" class="section level1">
+<h1>Install RStudio</h1>
+<ul>
+<li><p>Again, the main instructions are <a href="https://rstudio.com/products/rstudio/download-server/debian-ubuntu/">here</a> (scroll down to “Install for Debian 10 / Ubuntu 18 / Ubuntu 20”), but I have summarized them below.</p></li>
+<li><p>Import public code-signing key. As described <a href="https://rstudio.com/code-signing/">here</a>, this is necessary to install RStudio.</p></li>
+</ul>
+<pre class="bash"><code>gpg --keyserver keys.gnupg.net --recv-keys 3F32EE77E331692F</code></pre>
+<ul>
+<li>Download RStudio from the <a href="https://rstudio.com/products/rstudio/download/">main download page</a> with <code>wget</code>. Scroll down to “All Installers”, find the “Ubuntu 18/Debian 10” OS, right-click on the download file, and copy link address. As of November 2020, it is <em><a href="https://download1.rstudio.org/desktop/bionic/amd64/rstudio-1.3.1093-amd64.deb" class="uri">https://download1.rstudio.org/desktop/bionic/amd64/rstudio-1.3.1093-amd64.deb</a></em>, so that is used in the following example.</li>
+</ul>
+<pre class="bash"><code>cd ~/Downloads
+wget https://download1.rstudio.org/desktop/bionic/amd64/rstudio-1.3.1093-amd64.deb</code></pre>
+<ul>
+<li>Verify key on download. It should say “GOODSIG”. Install the <code>dpkg-sig</code> package if necessary. As of November 2020, the installer file is <em>rstudio-1.3.1093-amd64.deb</em>, so that is used in the following example.</li>
+</ul>
+<pre class="bash"><code>sudo apt-get install dpkg-sig
+dpkg-sig --verify rstudio-1.3.1093-amd64.deb</code></pre>
+<ul>
+<li>Install RStudio.</li>
+</ul>
+<pre class="bash"><code># assumes you are in Downloads/ folder
+sudo apt install ./rstudio-1.3.1093-amd64.deb</code></pre>
+<ul>
+<li>Launch with <code>rstudio</code>, or open in the “Application Finder”!</li>
+</ul>
+</div>

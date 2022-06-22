@@ -7,5 +7,40 @@ categories: []
 tags: []
 description: ~
 publishDate: '2022-06-21T16:52:28-04:00'
-draft: true
 ---
+
+**:construction: under construction :construction:**
+
+# RStudio Server
+
+The RStudio server itself can easily be updated using the following instructions:
+
+- [Upgrade Server](https://support.rstudio.com/hc/en-us/articles/216079967-Upgrading-RStudio-Server)
+- [Install New Version](https://www.rstudio.com/products/rstudio/download-server/debian-ubuntu/)
+
+Follow these [instructions](https://docs.rstudio.com/resources/install-r/) to install R with support for multiple versions.
+
+# R (Multiple Versions)
+
+The next step is to make sure you have the correct R Versions. Currently the server has 3.6.3 and 4.0.5 installed. The default is set by creating a link. For example, this will change the default version of R recognized by the operating system. This will be the one used by the Shiny server.
+
+```
+export R_VERSION=4.0.5
+
+sudo ln -s /opt/R/${R_VERSION}/bin/R /usr/local/bin/R
+sudo ln -s /opt/R/${R_VERSION}/bin/Rscript /usr/local/bin/Rscript
+```
+
+The OS default should flow through to the RStudio server. However, to set it explicitly, edit the configuration file `/etc/rstudio/rserver.conf`.
+
+```
+sudo rstudio-server restart
+```
+
+# Packages
+
+To install packages at the system level, enter R using the following.
+
+- `sudo -i R` will enter into R. We use this to install packages at a system level.
+
+These changes may require a server restart.

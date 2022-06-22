@@ -7,4 +7,14 @@ categories: []
 tags: []
 description: ~
 publishDate: '2022-06-21T16:51:41-04:00'
+draft: true
 ---
+
+The Shiny server has a few ways to host. There are two DNS entries mapped to the IP.
+
+1. *shiny* routes to a root location for company-wide hosting applications.
+2. *shinyusers* routes to a user-specific folder for individual use.
+
+The configuration file is located at `/etc/shiny-server/shiny-server.conf`, and a backup is attached.[shiny-server.conf](uploads/89be2397ad1386c0acfde145202aafdd/shiny-server.conf)
+
+RStudio has extensive [help information](https://docs.rstudio.com/shiny-server/) on this topic.

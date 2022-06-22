@@ -7,8 +7,86 @@ categories: []
 tags: []
 description: ~
 publishDate: '2022-06-21T17:00:40-04:00'
-draft: true
 ---
 
 
 
+<p><strong>:construction: under construction :construction:</strong></p>
+<div id="overview" class="section level1">
+<h1>Overview</h1>
+<p>PuTTY is great as an ssh client, and allows you to do anything while connected to the server. However, the colors are difficult to configure, and having a desktop environment set up can be beneficial in a variety of ways. With this set up, you will be able to open the Remote Desktop Connection feature on a Windows machine, and connect to an Ubuntu server, just like you would with a remote Windows machine.</p>
+<p><strong>Note: you will need sudo privileges.</strong></p>
+<p>There are two main steps:</p>
+<ol style="list-style-type: decimal">
+<li><p>Install and configure a remote desktop protocol (RDP)</p></li>
+<li><p>Install and configure a desktop environment (see examples <a href="https://itsfoss.com/best-linux-desktop-environments/">here</a>)</p></li>
+</ol>
+</div>
+<div id="procedure" class="section level1">
+<h1>Procedure</h1>
+<p>Follow instructions on <a href="https://www.nakivo.com/blog/how-to-use-remote-desktop-connection-ubuntu-linux-walkthrough/">this article</a>, under “Using Xrdp - Ubuntu Remote Desktop Server”. I will summarize them below. Note: I also added/edited a few things after the main process did not work. I listed those at the end, under <a href="#troubleshooting">Troubleshooting</a>.</p>
+<ol style="list-style-type: decimal">
+<li>Update packages</li>
+</ol>
+<pre><code>sudo apt-get update</code></pre>
+<ol start="2" style="list-style-type: decimal">
+<li>Install <code>xrdp</code>, an implementation of Microsoft RDP that uses the X Window system.</li>
+</ol>
+<pre><code>sudo apt-get install xrdp</code></pre>
+<ol start="3" style="list-style-type: decimal">
+<li>Install <code>xfce4</code>, the desktop environment that works best with xrdp.</li>
+</ol>
+<pre><code>sudo apt-get install xfce4</code></pre>
+<ol start="4" style="list-style-type: decimal">
+<li>Configure xrdp server to use xfce as the default graphical environment. The following command writes a string, “xfce4-session” into a new file, “.xsession”, and puts the file into the user’s home directory.</li>
+</ol>
+<pre><code>echo xfce4-session &gt; ~/.xsession</code></pre>
+<ol start="5" style="list-style-type: decimal">
+<li>Start xrdp on session startup, and restart xrdp service to enact changes.</li>
+</ol>
+<pre><code>sudo systemctl enable xrdp
+sudo service xrdp restart</code></pre>
+<ol start="6" style="list-style-type: decimal">
+<li>Copy default shell script needed to start xrdp and then clear it.</li>
+</ol>
+<pre><code>sudo cp /etc/xrdp/startwm.sh /etc/xrdp/startwm.sh1
+sudo sh -c &#39;cat /dev/null &gt; /etc/xrdp/startwm.sh&#39;</code></pre>
+<ol start="7" style="list-style-type: decimal">
+<li>Edit the startup script with <code>sudo nano /etc/xrdp/startwm.sh</code>. Once in the nano editor, it should be exactly as follows, with one empty line at the end of the script.</li>
+</ol>
+<pre><code>#!/bin/sh
+
+unset DBUS_SESSION_BUS_ADDRESS
+unset XDG_RUNTIME_DIR
+. $HOME/.profile
+
+if [ -r /etc/default/locale ]; then
+  . /etc/default/locale
+  export LANG LANGUAGE
+fi
+
+startxfce4
+</code></pre>
+<p>Save the script with <code>C-s</code> and then exit with <code>C-x</code>.</p>
+<ol start="8" style="list-style-type: decimal">
+<li>Set the <code>XDG_CONFIG_DIRS</code> environment variable.</li>
+</ol>
+<pre><code>export XDG_CONFIG_DIRS=/etc/xdg</code></pre>
+<ol start="9" style="list-style-type: decimal">
+<li>Restart the xrdp service again.</li>
+</ol>
+<pre><code>sudo service xrdp restart</code></pre>
+<ol start="10" style="list-style-type: decimal">
+<li><p>Check the IP address of your Ubuntu server with <code>ifconfig</code>. Write it down somewhere. It will be the “ens” one.</p></li>
+<li><p>Open the Remote Desktop Connection service on your Windows machine. Enter the IP address that you saved in step 10. Select Xorg from the dropdown, and enter your credentials for the Ubuntu server.</p></li>
+</ol>
+<p>You now have a desktop interface to your Ubuntu server! Open a terminal with the terminal icon, and it is just like being ssh’d in with PuTTY. You can also open as many terminals as you want, which is nice. Another nice feature is copy/paste with right click.</p>
+</div>
+<div id="troubleshooting" class="section level1">
+<h1>Troubleshooting</h1>
+<ul>
+<li><p><a href="http://oukyi.blogspot.com/2018/09/xfce-login-error-unable-to-load.html">Setting the XDG_CONFIG_DIRS variable</a>. This was not set by default for me, and I think <strong>this is the most important fix</strong>.</p></li>
+<li><p><a href="https://catch22cats.blogspot.com/2018/05/xrdp-blank-screen-with-ubuntu-1804.html">Unsetting environment variables in the startup script for xrdp</a>. Not sure if this affected anything, but it works like this.</p></li>
+<li><p><a href="https://askubuntu.com/questions/1152820/unable-to-establish-rdp-connection-with-xrdp">Installing xorgxrdp-hwe-18.04</a>. Pretty sure this was <em>not</em> the error as there were no errors with installation of <code>xrdp</code>, but it worked with this package installed.</p></li>
+</ul>
+</div>

@@ -7,8 +7,124 @@ categories: []
 tags: []
 description: ~
 publishDate: '2022-06-21T16:55:25-04:00'
-draft: true
 ---
 
 
 
+<div id="overview" class="section level1">
+<h1>Overview</h1>
+<p>If you do not have access to a dedicated Git server (usually hosts the GitLab/GitHub platforms), but still want to use Git for version control and collaboration, this page is for you! Most environments utilize a shared network drive, so you can use a folder on the drive as the remote “server”. This allows you to work locally, which is much faster in most cases. This setup is ideal for client environments without access to GitLab or GitHub.</p>
+</div>
+<div id="definitions" class="section level1">
+<h1>Definitions</h1>
+<ul>
+<li><p><strong>Repository</strong> (more commonly, “repo”) - a central location for code, configuration files, and minor metadata.</p></li>
+<li><p><strong>Remote</strong> - main repo, stored in a shared location. Usually a server, but will be a shared network folder for this purpose.</p></li>
+<li><p><strong>Local</strong> - copy of repo on user device. Cloned from the Remote repo.</p></li>
+<li><p><strong>Network Copy</strong> - specific to this purpose. A copy of the Remote repo cloned to another shared network location.</p></li>
+</ul>
+</div>
+<div id="workflow-preview" class="section level1">
+<h1>Workflow Preview</h1>
+<ol style="list-style-type: decimal">
+<li><p>Perform all work on Local machine(s).</p></li>
+<li><p>Push/pull to Remote.</p></li>
+<li><p>When ready, open the Network Copy and pull. This is the “live” version of the projects. No editing is done here.</p></li>
+</ol>
+</div>
+<div id="requirements" class="section level1">
+<h1>Requirements</h1>
+<p>While you can use the command line for all Git transactions, this page will use the terminal in RStudio. Furthermore, you can take advantage of the Git GUI within RStudio to visualize branches, commits, changes, etc. It’s like having GitLab/GitHub without the platform.</p>
+<ul>
+<li><p><a href="https://git-scm.com/downloads">Git Executable</a>, for Windows</p>
+<ul>
+<li><p>You do not need Admin rights to install.</p></li>
+<li><p>Leave all options as default when installing. This is important.</p></li>
+</ul></li>
+<li><p>R/RStudio</p></li>
+<li><p>A shared network folder mapped to a drive letter.</p></li>
+<li><p>A basic understanding of Linux command line navigation.</p></li>
+</ul>
+<p><strong>Note: throughout, <em>[some text]</em> means replace with case-specific things. Do not include the brackets.</strong></p>
+</div>
+<div id="procedure" class="section level1">
+<h1>Procedure</h1>
+<ol style="list-style-type: decimal">
+<li><p>Set up.</p>
+<ul>
+<li><p>Launch RStudio.</p></li>
+<li><p>Ensure any RStudio projects are closed.</p></li>
+<li><p>If the Git executable was installed correctly, you should have the option to launch new Terminals with Git Bash. Go to <strong>Tools &gt; Global Options</strong>, <strong>Terminal</strong> from the sidebar, and make sure “New terminals open with:” <strong>Git Bash</strong>.</p></li>
+<li><p>Launch two new terminals. It’s nice to have one for the network side and one for the local side.</p></li>
+</ul></li>
+<li><p>Prepare the local folder.</p>
+<ul>
+<li><p>Create a folder where you want to work locally. I like to put local projects here, for example: <code>C:\Users\[your username]\Software\GitLocal\[your project name]</code>. You can do this through the Windows explorer or at the command line.</p></li>
+<li><p>Open the local terminal session.</p></li>
+<li><p>Navigate to the empty folder you just created. Initialize a new Git repository.</p></li>
+</ul></li>
+</ol>
+<pre><code>cd [path to new folder as above]
+git init</code></pre>
+<ol start="3" style="list-style-type: decimal">
+<li><p>Prepare the remote folder.</p>
+<ul>
+<li><p>Create a folder for the remote repo. Keep in mind this will act as the “server”. You won’t be able to see files there, it will just act as the engine for cloning from, pushing to, and pulling from. I put it here, for example: <code>[network drive letter]:\[path to your network project folder]\GitRemote\[your project name]</code>. Make sure it’s named the same as your local folder. You can do this through the Windows explorer or at the command line.</p></li>
+<li><p>Open the network terminal session.</p></li>
+<li><p>Navigate to the empty folder you just created. Initialize a new, <strong>bare</strong> Git repository. Without a bare repo, you will get errors. I won’t pretend I know why. I learned through troubleshooting.</p></li>
+</ul></li>
+</ol>
+<pre><code>cd [path to new folder as above]
+git init --bare</code></pre>
+<ol start="4" style="list-style-type: decimal">
+<li><p>Add files to local folder.</p>
+<ul>
+<li><p>Create an RStudio project in the new local folder (do this in a different session so you don’t lose your terminals). If you already have an RStudio project, simply copy all of the files into the new local folder. The next time you open the RStudio project, it will automatically recognize the version control because of the <code>.git</code> folder within the local folder. Don’t worry about opening the project just yet.</p></li>
+<li><p>Open the local terminal session. If you do <code>git status</code>, you should see all of the files you just created/copied.</p></li>
+<li><p>Stage the files, commit them locally, add the remote folder origin, and push to the remote.</p></li>
+</ul></li>
+</ol>
+<pre><code>git add --all
+git commit -m &quot;Initial commit&quot;
+git remote add origin &quot;[full path to the remote folder]&quot;
+git push origin master</code></pre>
+<ol start="5" style="list-style-type: decimal">
+<li><p>Clone a copy to the shared network location.</p>
+<ul>
+<li>Open remote terminal session. Navigate to a location that will house the production-ready versions of your projects. Clone from the remote “server”. It’s probably a good idea to make those folders read/execute only.</li>
+</ul></li>
+</ol>
+<pre><code>cd [path to network location]
+git clone &quot;[full path to the remote folder]&quot;</code></pre>
+</div>
+<div id="creating-a-new-project" class="section level1">
+<h1>Creating a New Project</h1>
+<ul>
+<li><p>Open network and local terminal sessions.</p></li>
+<li><p>Within remote folder, create a folder for the new Git project.</p></li>
+<li><p>In remote terminal session, navigate to the new folder; initialize the repo.</p></li>
+</ul>
+<pre><code>cd [path to new folder]
+git init --bare</code></pre>
+<ul>
+<li><p>Within Git local folder, create a folder of the same name for the new project.</p></li>
+<li><p>In local terminal session, navigate to the new folder; initialize the repo.</p></li>
+</ul>
+<pre><code>cd [path to new folder]
+git init</code></pre>
+<ul>
+<li><p>Create a new RStudio project in a different RStudio session. Save it in the local new folder.</p></li>
+<li><p>In local terminal session (within new folder), stage and commit files, add the remote folder origin, and push to the remote.</p></li>
+</ul>
+<pre><code>git add --all
+git commit -m &quot;Initial commit&quot;
+git remote add origin &quot;[full path to the remote folder]&quot;
+git push origin master</code></pre>
+</div>
+<div id="resources" class="section level1">
+<h1>Resources</h1>
+<ul>
+<li><p><a href="https://stackoverflow.com/questions/11635493/push-git-changes-to-a-shared-network-drive" class="uri">https://stackoverflow.com/questions/11635493/push-git-changes-to-a-shared-network-drive</a></p></li>
+<li><p><a href="https://stackoverflow.com/questions/2199897/how-to-convert-a-normal-git-repository-to-a-bare-one" class="uri">https://stackoverflow.com/questions/2199897/how-to-convert-a-normal-git-repository-to-a-bare-one</a></p></li>
+</ul>
+</div>

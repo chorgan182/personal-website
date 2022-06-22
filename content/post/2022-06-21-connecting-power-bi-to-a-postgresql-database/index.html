@@ -7,8 +7,46 @@ categories: []
 tags: []
 description: ~
 publishDate: '2022-06-21T16:53:31-04:00'
-draft: true
 ---
 
 
 
+<p><strong>:construction: under construction :construction:</strong></p>
+<div id="overview" class="section level1">
+<h1>Overview</h1>
+<p>The USASpending database that lives on the <em>(name of server)</em> server is running on PostgreSQL 10. Power BI gives the option for a PostgreSQL data source, but it can be error-prone. Using an ODBC connection is simple and secure.</p>
+</div>
+<div id="procedure" class="section level1">
+<h1>Procedure</h1>
+<ol style="list-style-type: decimal">
+<li><p>Open Power BI desktop.</p></li>
+<li><p>Click <em>Get data</em>.</p></li>
+</ol>
+<div class="figure">
+<img src="uploads/9cd5de256897f75fcf64821ca4adf5bf/image.png" alt="" />
+<p class="caption">image</p>
+</div>
+<ol start="3" style="list-style-type: decimal">
+<li>In the search bar, type “odbc”. Click <em>Connect</em>.</li>
+</ol>
+<div class="figure">
+<img src="uploads/d6179f5402839c9fb20085a1ecfb679a/image.png" alt="" />
+<p class="caption">image</p>
+</div>
+<ol start="4" style="list-style-type: decimal">
+<li>In the <em>Data source name</em> dropdown, select <em>(None)</em>. Expand the <em>Advanced options</em> and enter the following connection string. Click <em>OK</em>.</li>
+</ol>
+<pre><code>Driver={PostgreSQL ANSI(x64)};Server=a-server.com;Port=5432;Database=usaspending;</code></pre>
+<ol start="5" style="list-style-type: decimal">
+<li>Enter a valid set of credentials. Click <em>Connect</em>.</li>
+</ol>
+<p>A successful connection will bring up a Navigator and look like the following.</p>
+<p><em>an image to be added</em></p>
+<p>If you mistype a username or password, you will need to clear the cache of credentials. Go to <em>File &gt; Options and Settings &gt; Data source settings</em>. Find the connection string you just entered, right-click on it, and <em>Clear Permissions</em>. You will have to start from the beginning with <em>Get data</em>.</p>
+<p><em>an image to be added</em></p>
+</div>
+<div id="references" class="section level1">
+<h1>References</h1>
+<p><a href="https://niftit.com/connecting-power-bi-to-postgresql/" class="uri">https://niftit.com/connecting-power-bi-to-postgresql/</a></p>
+<p><a href="https://www.connectionstrings.com/postgresql-odbc-driver-psqlodbc/" class="uri">https://www.connectionstrings.com/postgresql-odbc-driver-psqlodbc/</a></p>
+</div>

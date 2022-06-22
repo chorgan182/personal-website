@@ -7,8 +7,45 @@ categories: []
 tags: []
 description: ~
 publishDate: '2022-06-21T16:59:48-04:00'
-draft: true
 ---
 
 
 
+<p><strong>:construction: under construction :construction:</strong></p>
+<div id="overview" class="section level1">
+<h1>Overview</h1>
+<p>Sometimes we find we are copying modules between workbooks just to use a few macros in them. It may be more efficient to store your custom macros in one place. <strong>Note</strong>, however, that this may not be the best solution for collaboration. If another team member will be using the same macros upon opening the workbook, then it is not a good idea to store them in a personal location.</p>
+</div>
+<div id="process" class="section level1">
+<h1>Process</h1>
+<ul>
+<li><p>Create the Personal workbook.</p>
+<ul>
+<li><p>Open Developer tab.</p></li>
+<li><p>Click “Record Macro”.</p></li>
+<li><p>Don’t worry about naming the macro; it will be temporary.</p></li>
+<li><p>In “Store macro in” box, select “Personal Macro Workbook”.</p></li>
+<li><p>Click “OK”.</p></li>
+</ul></li>
+<li><p>The PERSONAL.xlsb file will now be created in the XLSTART folder.</p></li>
+<li><p>To use common macros, copy them to modules within the PERSONAL.xlsb file. It will be launched each time Excel opens.</p></li>
+</ul>
+</div>
+<div id="sharing-personal.xlsb-files" class="section level1">
+<h1>Sharing PERSONAL.xlsb files</h1>
+<ul>
+<li><p>Find your XLSTART path.</p>
+<ul>
+<li><p>Open Developer tab.</p></li>
+<li><p>Click on “Visual Basic”.</p></li>
+<li><p>Hit <code>Ctrl + g</code> to bring up the Immediate window.</p></li>
+<li><p>Type <code>? application.StartupPath</code> and press enter.</p></li>
+</ul></li>
+<li><p>Copy other PERSONAL.xlsb files into that path, and they will be available for use the next time Excel is launched.</p></li>
+</ul>
+</div>
+<div id="resources" class="section level1">
+<h1>Resources</h1>
+<p><a href="https://www.techrepublic.com/blog/microsoft-office/quick-tip-find-excels-xlstart-folder-fast/" class="uri">https://www.techrepublic.com/blog/microsoft-office/quick-tip-find-excels-xlstart-folder-fast/</a></p>
+<p><a href="https://support.microsoft.com/en-us/office/create-and-save-all-your-macros-in-a-single-workbook-66c97ab3-11c2-44db-b021-ae005a9bc790" class="uri">https://support.microsoft.com/en-us/office/create-and-save-all-your-macros-in-a-single-workbook-66c97ab3-11c2-44db-b021-ae005a9bc790</a></p>
+</div>

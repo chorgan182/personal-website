@@ -9,3 +9,109 @@ description: ~
 publishDate: '2022-06-21T16:56:31-04:00'
 draft: true
 ---
+
+# Overview
+
+Requirements: Admin access on GitLab.
+
+[Runner installation options](https://docs.gitlab.com/runner/install/)
+
+# Install Docker
+
+[Docker installation on Ubuntu](https://docs.docker.com/engine/install/ubuntu/)
+
+- Remove any previous docker installation or config files (you may or may not have these).
+
+```bash
+# old versions
+sudo apt-get remove docker docker-engine docker.io containerd runc
+
+# uninstall docker engine
+sudo apt-get purge docker-ce docker-ce-cli containerd.io
+
+# purge all docker files
+sudo rm -rf /var/lib/docker
+```
+
+- Install using the repository.
+
+```bash
+# update apt
+sudo apt-get update
+
+# install packages to allow apt to use repo
+sudo apt-get install \
+    apt-transport-https \
+    ca-certificates \
+    curl \
+    gnupg-agent \
+    software-properties-common
+```
+
+- Add docker key.
+
+```bash
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+
+# verify with: 
+sudo apt-key fingerprint 0EBFCD88
+```
+
+- Set up repo.
+
+```bash
+sudo add-apt-repository \
+   "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+   $(lsb_release -cs) \
+   stable"
+```
+
+- Install latest version of docker engine and containerd.
+
+```bash
+sudo apt-get update
+sudo apt-get install docker-ce docker-ce-cli containerd.io
+```
+
+- Verify docker is running with the `hello-world` image.
+
+```bash
+sudo docker run hello-world
+```
+You should see something like the following:
+![image](uploads/6a046bc5accc2dc00ccf3a0b3e7873c1/image.png)
+
+# Install Docker Image and Start the Container
+
+[Run GitLab Runner in a container](https://docs.gitlab.com/runner/install/docker.html)
+
+- Use option 2: Docker volumes.
+
+```bash
+# create docker volume
+sudo docker volume create gitlab-runner-config
+
+# start the runner container
+sudo docker run -d --name gitlab-runner --restart always \
+    -v /var/run/docker.sock:/var/run/docker.sock \
+    -v gitlab-runner-config:/etc/gitlab-runner \
+    gitlab/gitlab-runner:latest \
+    --env TZ="America/New_York"
+```
+
+# Register Runner
+
+[Registering runners](https://docs.gitlab.com/runner/register/index.html)
+
+- Since we used volume mounts above, choose that option for the register command.
+
+```bash
+sudo docker run --rm -it -v gitlab-runner-config:/etc/gitlab-runner gitlab/gitlab-runner:latest register
+```
+
+- Follow on-screen prompts. The gitlab-ci coordinator for us is `https://gitlab.technomics.net/`. The registration token can be found in the Admin area of GitLab in the top left. Follow the rest of the prompts (all can be changed later in GitLab interface).
+
+- Choose `docker` as the executor. ([Selecting Executors](https://docs.gitlab.com/runner/executors/README.html))
+
+- I chose `gitlab/gitlab-runner` as the default image, but that could be wrong
+

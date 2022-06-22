@@ -7,8 +7,61 @@ categories: []
 tags: []
 description: ~
 publishDate: '2022-06-21T17:01:59-04:00'
-draft: true
 ---
 
 
 
+<p><strong>:construction: under construction :construction:</strong></p>
+<div id="overview" class="section level1">
+<h1>Overview</h1>
+<p>TLJH is the most simple solution for running Jupyter notebooks on a local server for multiple users - see the <a href="https://jupyterhub.readthedocs.io/en/latest/">JupyterHub</a>. <em>If you need to start over, you need to follow all the blue revert notes on the <a href="https://tljh.jupyter.org/en/latest/topic/installer-actions.html">What does the installer do?</a> page.</em></p>
+<ul>
+<li><p><code>ssh</code> into an Ubuntu server. You will need sudo privileges.</p></li>
+<li><p>Update packages. Postgres always has some unsigned repos for some reason. Tried following the instructions for <a href="https://www.postgresql.org/download/linux/ubuntu/">Postgres Linux downloads</a>, but they didn’t work. Found this <a href="https://askubuntu.com/questions/732985/force-update-from-unsigned-repository">SO article</a> and tailored it according to this <a href="https://wiki.postgresql.org/wiki/Apt">Postgres Wiki</a>. The “amd64” package failed to update for some reason still, even though it is downstream from the trusted repo. So <code>sudo apt-get update</code> <em>still</em> fails. Finally, I followed the instructions in the answer on this <a href="https://www.digitalocean.com/community/questions/sudo-apt-get-update-command-is-not-working">DigitalOcean article</a>, and the package update worked. It was hanging up on a few random things before.</p></li>
+</ul>
+<div id="attempt-1-failed" class="section level2">
+<h2>Attempt 1 (failed)</h2>
+<pre><code>sudo nano /etc/apt/sources.list.d/pgdg.list
+# add a line: deb [trusted=yes] http://apt.postgresql.org/pub/repos/apt bionic-pgdg main
+# C-s, C-x to save and exit nano editor
+sudo apt-get update
+# ^ still did not work</code></pre>
+</div>
+<div id="attempt-2-successful" class="section level2">
+<h2>Attempt 2 (successful)</h2>
+<pre><code>sudo rm -rvf /var/lib/apt/lists/*
+# cannot run the following echo... command with sudo for some reason, switch to root user 
+sudo su - root
+echo &quot;APT::Cache-Limit &quot;100000000&quot;;&quot; &gt;&gt; /etc/apt/apt.conf.d/70debconf
+su - &lt;your user name&gt;
+
+sudo rm -rvf /var/lib/apt/lists/* \
+&amp;&amp; sudo mv /var/lib/dpkg/status /var/lib/dpkg/status-bad \
+&amp;&amp; sudo cp /var/lib/dpkg/status-old /var/lib/dpkg/status \
+&amp;&amp; sudo apt-get update
+
+sudo apt-get autoclean \
+&amp;&amp; sudo apt-get autoremove -y \
+&amp;&amp; sudo apt-get update
+
+sudo apt-get upgrade -y</code></pre>
+<ul>
+<li>Follow the <a href="https://tljh.jupyter.org/en/latest/install/custom-server.html">Installing on your own server</a> instructions. Note the requirements. Change the <code>&lt;admin-user-name&gt;</code> as appropriate.</li>
+</ul>
+<pre><code>sudo apt install python3 python3-dev git curl
+sudo curl -L https://tljh.jupyter.org/bootstrap.py | sudo -E python3 - --admin &lt;admin-user-name&gt;</code></pre>
+<ul>
+<li>Stop after step 4; we need to update the port for the public IP. If you <a href="https://tljh.jupyter.org/en/latest/troubleshooting/logs.html#traefik-proxy-logs">check the proxy log</a>, you’ll see that the <code>traefik</code> service may fail to start due to an error opening a listener on port 80. This default port may already be in use on <code>datsdev</code>.</li>
+</ul>
+<pre><code>sudo journalctl -u traefik</code></pre>
+<ul>
+<li>Update the http port (I used 8080 but could be any not in use) and reload the proxy with the <a href="https://tljh.jupyter.org/en/latest/topic/tljh-config.html#ports">port configuration instructions</a>. Also reload the hub.</li>
+</ul>
+<pre><code>sudo tljh-config set http.port 8080
+sudo tljh-config reload proxy
+sudo tljh-config reload hub</code></pre>
+<ul>
+<li>Proceed to step 5 of the instructions. Use <strong>your server DNS</strong> as the “public IP” - append that with the port we just set, and the Jupyter login page should open.</li>
+</ul>
+</div>
+</div>

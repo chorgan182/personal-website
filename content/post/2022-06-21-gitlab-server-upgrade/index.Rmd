@@ -9,3 +9,106 @@ description: ~
 publishDate: '2022-06-21T16:57:41-04:00'
 draft: true
 ---
+
+# Overview
+
+How to upgrade Technomics gitlab server using the command line. 
+
+# Procedure
+
+## Update Repository
+
+-Identify edition version. ? dropdown (top-right) help.
+
+- login to the host server via SSH (secure shell connection) on putty.exe
+
+- Need: server info (adam james), admin login 
+
+- See what is in the local repo (the packages)
+
+```{bash}
+# This will display all locally available packages for this repo (use " | " and "head")
+sudo apt-cash madison gitlab-ce
+```
+
+- The most recent version should be the current version (the one at the top :) )
+
+- Now we must update the repository of packages
+
+```{bash}
+# Updates the packages
+sudo apt update
+```
+
+- If you receive error: 
+
+{{image.png}}
+
+- Obtain the public key from the gitlab repository
+
+```{bash}
+sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 3F01618A51312F3F 
+# This public key is specific to gitlab
+```
+
+- Run apt update again
+
+```{bash}
+sudo apt update
+```
+
+- Confirm that the repository was updated successfully by checking the cache again (can see more recent by typing output into head)
+
+```{bash}
+sudo apt-cash madison gitlab-ce | head -10
+```
+
+- You should see more recent versions of packages in the output
+
+## Backup GitLab
+
+- Create a backup of all projects on the server
+
+```{bash}
+sudo gitlab-backup create
+# This will take a few minutes to run
+```
+
+- Must manually backup encryption keys. This is necessary because encryption doesn't make sense if the keys are stored along with the back up (: 
+
+- To do this manually copy gitlab-secrets.json and gitlab.rb to any other location
+
+```{bash}
+cd /etc/gitlab/
+
+sudo cp gitlab.rb gitlab-secrets.json /home/bitnami/
+
+# Check that files were copied
+
+ls /home/bitnami
+```
+
+## Installing New Version(s)
+
+```{bash}
+
+sudo apt install gitlab-ce=12.10.14-ce.0
+
+# This will take 10ish minutes
+```
+
+- After install is complete, wait 5-10min prior to checking if server is live
+
+- Confirm version upgrade (see step 1)
+
+## References
+
+- Public key error: https://unix.stackexchange.com/questions/75807/no-public-key-available-on-apt-get-update
+
+- apt madison: https://unix.stackexchange.com/questions/276037/why-apt-madison
+
+- Upgrade paths: https://docs.gitlab.com/ee/update/index.html#upgrade-paths
+
+- https://docs.gitlab.com/ee/update/
+
+- back up gitlab (read whole page): https://docs.gitlab.com/ee/raketasks/backup_restore.html

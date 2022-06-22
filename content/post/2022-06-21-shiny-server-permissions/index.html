@@ -7,8 +7,37 @@ categories: []
 tags: []
 description: ~
 publishDate: '2022-06-21T16:59:15-04:00'
-draft: true
 ---
 
 
 
+<p><strong>:construction: under construction :construction:</strong></p>
+<div id="problem" class="section level1">
+<h1>Problem</h1>
+<p>When using R’s drat to publish new versions of a package, users would get a permissions error. This was due to the user not having sufficient permissions to copy files into an Archive/ directory.</p>
+</div>
+<div id="solution" class="section level1">
+<h1>Solution</h1>
+<p>Change the default permissions for users within the shiny-users group, add a flag to the FACL that inherits parent directory permissions, and change the group for all existing files/directories within /srv/shiny-server/tran/.</p>
+</div>
+<div id="useful-commands-learned" class="section level1">
+<h1>Useful Commands Learned</h1>
+<p>(All are examples specific to this problem. Many can only be run with sudo privileges.)</p>
+<ul>
+<li>List all local users <code>cut -d : -f1 /etc/passwd</code></li>
+<li>List all groups <code>groups</code></li>
+<li>List all users within a group <code>getent group shiny-users</code></li>
+<li>Show the FACL (File Access Control List) for a directory <code>getfacl tran/</code></li>
+<li>Modify default permissions recursively for <em>a group</em>, for every directory found under tran/ <code>sudo find tran/ -type d -exec setfacl -Rdm g:shiny-users:rwx {} +</code></li>
+<li>Modify default permissions recursively for <em>others</em>, for every directory found under tran/ <code>sudo find tran/ -type d -exec setfacl -Rdm other::rx {} +</code></li>
+<li>Add the <em>setgid</em> bit, for every directory found under tran/ <code>sudo find tran/ -type d -exec chmod g+s {} +</code></li>
+<li>Change the group to <em>shiny-users</em> recursively for all files and directories under tran/ <code>sudo chgrp -R shiny-users tran/</code></li>
+</ul>
+</div>
+<div id="references" class="section level1">
+<h1>References</h1>
+<ul>
+<li><p>Read up on how Linux does permissions <a href="https://www.linux.com/training-tutorials/understanding-linux-file-permissions/">here</a>.</p></li>
+<li><p><a href="https://unix.stackexchange.com/questions/1314/how-to-set-default-file-permissions-for-all-folders-files-in-a-directory">Setting default permissions with <code>chmod</code> and <code>setfacl</code></a></p></li>
+</ul>
+</div>

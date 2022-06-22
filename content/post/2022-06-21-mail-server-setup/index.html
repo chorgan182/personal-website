@@ -7,8 +7,54 @@ categories: []
 tags: []
 description: ~
 publishDate: '2022-06-21T16:58:41-04:00'
-draft: true
 ---
 
 
 
+<p><strong>:construction: under construction :construction:</strong></p>
+<div id="overview" class="section level1">
+<h1>Overview</h1>
+<p>As I quickly learned while venturing down this path, the backend of email transfer is actually quite complicated. Rather, it <em>can</em> be. Sifting through all of the information out there for every system and configuration can be overwhelming, so this little tutorial is meant to simplify things. However, to understand how email works, read the following wiki on the concepts behind email: <a href="https://gitlab.com/muttmua/mutt/-/wikis/MailConcept">How email works</a></p>
+<p>Now that you know the differences between all of the MxAs, our simple configuration will involve an <strong>MTA</strong> and an <strong>MUA</strong>. I found <code>mutt</code> first, which is a simplified command-line MUA. Then I realized that <a href="https://gitlab.com/muttmua/mutt/-/wikis/MuttFaq/Sendmail">mutt needs an MTA</a> to actually send the mail, so I found that <code>sendmail</code> was the easiest to install and use.</p>
+</div>
+<div id="install-and-configure-an-mta" class="section level1">
+<h1>Install and Configure an MTA</h1>
+<ul>
+<li><p>As mentioned above, we are using <code>sendmail</code>. The following <a href="https://kenfavors.com/code/how-to-install-and-configure-sendmail-on-ubuntu/">instructions</a> were used to set it up, but I summarized the steps below.</p></li>
+<li><p>Install sendmail.</p></li>
+</ul>
+<pre><code>sudo apt-get install sendmail</code></pre>
+<ul>
+<li><p>Ensure hostname is in the host file.</p>
+<ul>
+<li><p>If the hostname is already in the host file, exit with <code>C-x</code>.</p></li>
+<li><p>If it is not, add it to the local line as follows (changing “hostname” to whatever yours is): <code>127.0.0.1 localhost hostname</code>.</p></li>
+<li><p>Save and exit with <code>C-s</code> <code>C-x</code>.</p></li>
+</ul></li>
+</ul>
+<pre><code># check hostname
+hostname
+# edit host file
+sudo nano /etc/hosts</code></pre>
+<ul>
+<li>Run configuration, and say yes to everything</li>
+</ul>
+<pre><code>sudo sendmailconfig</code></pre>
+</div>
+<div id="install-and-configure-a-mail-user-agent" class="section level1">
+<h1>Install and Configure a Mail User Agent</h1>
+<ul>
+<li><p>As mentioned above, we are using <code>mutt</code>. A link to the full guide on their GitLab wiki can be found <a href="https://gitlab.com/muttmua/mutt/-/wikis/MuttGuide">here</a>.</p></li>
+<li><p>Install mutt.</p></li>
+</ul>
+<pre><code>sudo apt-get install mutt</code></pre>
+<ul>
+<li>That’s it! Test it with something like this:</li>
+</ul>
+<pre><code>echo &quot;Test&quot; | mutt -s Hello user@example.com</code></pre>
+<ul>
+<li>…or with an attachment:</li>
+</ul>
+<pre><code>$ echo &quot;Test text&quot; | mutt -s &quot;Test mail&quot; -a example_file.txt -- user@example.com</code></pre>
+<p>For more help or examples, check out this <a href="https://help.ubuntu.com/community/mutt">mutt article on Ubuntu Community</a> or this <a href="https://www.cyberciti.biz/tips/sending-mail-with-attachment.html">mutt article on nixCraft</a>.</p>
+</div>
