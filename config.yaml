@@ -37,7 +37,7 @@ params:
     portfolio: project
     post: article
   sidebar:
-    backgroundImage: "/images/sdr_res.jpg"
+    backgroundImage: "/images/trail_camp.jpg"
     gradientOverlay: rgba(0,0,0,0.4),rgba(0,0,0,0.8)
     logo: "/images//Headshot Summer 2021_square.jpg"
   social:
